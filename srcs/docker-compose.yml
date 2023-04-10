@@ -1,0 +1,64 @@
+version: '3.3'
+services:
+  nginix:
+    build: requirements/nginx/.
+    container_name: nginx
+    ports:
+      - "443:443"
+    networks:
+      - mynetwork
+    volumes:
+      - wp_files:/tmp
+  mariadb:
+    build: requirements/mariadb/.
+    container_name: mariadb
+    ports:
+      - "3306:3306"
+    networks:
+      - mynetwork
+  wordpress:
+    build: requirements/wordpress/.
+    container_name: wordpress
+    ports:
+      - "9000:9000"
+    networks:
+      - mynetwork
+    volumes:
+      - wp_files:/tmp
+  adminer:
+    build: requirements/bonus/Adminer/.
+    container_name: adminer
+    ports:
+      - "8080:8080"
+    networks:
+      - mynetwork
+  staticwebsite:
+    build: requirements/bonus/staticwebsite/.
+    container_name: staticwebsite
+    ports:
+      - "1337:1337"
+  redis:
+    build: requirements/bonus/redis/.
+    container_name: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - mynetwork
+  cadvisor:
+    build: requirements/bonus/Cadvisor/.
+    container_name: cadvisor
+    ports:
+      - "6060:8080"
+    networks:
+      - mynetwork
+    volumes:
+      - "/:/rootfs:ro"
+      - "/var/run:/var/run:rw"
+      - "/sys:/sys:ro"
+      - "/var/lib/docker:/var/lib/docker:ro"
+    restart: unless-stopped
+networks:
+  mynetwork:
+
+volumes:
+  wp_files:

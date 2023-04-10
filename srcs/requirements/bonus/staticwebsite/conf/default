@@ -1,0 +1,6 @@
+server
+{
+    listen 1337;
+    index index.html;
+    root /myweb;
+}

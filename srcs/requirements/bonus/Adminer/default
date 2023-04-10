@@ -1,0 +1,14 @@
+
+server
+{
+    listen 8080;
+    index adminer.php;
+    root /tmp;
+    location ~ \.php$ 
+    {
+        include       mime.types;
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_param PATH_INFO $fastcgi_path_info;
+    }
+}
