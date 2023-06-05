@@ -7,5 +7,4 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-EXPOSE 6060
 CMD ["/usr/bin/cadvisor"]

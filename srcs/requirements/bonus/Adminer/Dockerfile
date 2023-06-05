@@ -5,9 +5,6 @@ RUN apt-get update && apt-get install -y wget && apt-get install -y nginx && apt
 
 RUN wget "https://github.com/vrana/adminer/releases/download/v4.8.1/adminer-4.8.1.php" -O /tmp/index.php
 
-COPY ./default /etc/nginx/sites-enabled
+WORKDIR /tmp
 
-
-
-# CMD ["nginx", "-g", "daemon off;"]
-CMD [ "php", "-S", "[::]:8080 ssl" , "-t", "/tmp" ]
+CMD [ "php", "-S", "0.0.0.0:8080" , "index.php" ]

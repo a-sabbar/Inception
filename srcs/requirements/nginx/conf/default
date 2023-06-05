@@ -1,23 +1,18 @@
+server
+{
+    listen 443 ssl;
+    
+    ssl_certificate /etc/ssl/certs/nginx-selfsigned.crt;
+    ssl_certificate_key /etc/ssl/private/nginx-selfsigned.key;
 
-    server
+    ssl_protocols TLSv1.3;
+    
+    index index.php;
+    root /tmp;
+    location ~ \.php$ 
     {
-        listen 443 ssl;
-        listen [::]:443 ssl;
-
-        
-        ssl_certificate /etc/ssl/certs/nginx-selfsigned.crt;
-        ssl_certificate_key /etc/ssl/private/nginx-selfsigned.key;
-
-        ssl_protocols TLSv1.3;
-        index index.php;
-        root /tmp;
-        location ~ \.php$ 
-        {
-            include       mime.types;
-            include fastcgi_params;
-            fastcgi_pass wordpress:9000;
-            fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-            fastcgi_param PATH_INFO $fastcgi_path_info;
-        }
-
+        include fastcgi_params;
+        fastcgi_pass wordpress:9000;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
     }
+}

@@ -1,52 +1,70 @@
 version: '3.3'
+
 services:
   nginix:
     build: requirements/nginx/.
     container_name: nginx
+    image: nginx
     ports:
       - "443:443"
+    depends_on:
+      - wordpress
     networks:
       - mynetwork
     volumes:
       - wp_files:/tmp
+    restart: always
   mariadb:
     build: requirements/mariadb/.
     container_name: mariadb
-    ports:
-      - "3306:3306"
+    image: mariadb
+    env_file:
+      - .env
     networks:
       - mynetwork
+    volumes:
+      - db_files:/var/lib/mysql
+    restart: always
   wordpress:
     build: requirements/wordpress/.
     container_name: wordpress
-    ports:
-      - "9000:9000"
+    image: wordpress
+    env_file:
+      - .env
     networks:
       - mynetwork
     volumes:
       - wp_files:/tmp
+    restart: always
   adminer:
     build: requirements/bonus/Adminer/.
     container_name: adminer
+    image: adminer
     ports:
       - "8080:8080"
     networks:
       - mynetwork
+    restart: always
   staticwebsite:
     build: requirements/bonus/staticwebsite/.
-    container_name: staticwebsite
+    container_name: mystaticwebsite
+    image: mystaticwebsite
     ports:
       - "1337:1337"
+    restart: always
   redis:
-    build: requirements/bonus/redis/.
+    build: requirements/bonus/Redis/.
     container_name: redis
+    image: redis
     ports:
       - "6379:6379"
     networks:
       - mynetwork
+    restart: always
   cadvisor:
     build: requirements/bonus/Cadvisor/.
     container_name: cadvisor
+    image: cadvisor
     ports:
       - "6060:8080"
     networks:
@@ -56,9 +74,18 @@ services:
       - "/var/run:/var/run:rw"
       - "/sys:/sys:ro"
       - "/var/lib/docker:/var/lib/docker:ro"
-    restart: unless-stopped
+    restart: always
+
 networks:
   mynetwork:
-
 volumes:
   wp_files:
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: /home/asabbar/data/wp_files
+  db_files:
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: /home/asabbar/data/db_files
